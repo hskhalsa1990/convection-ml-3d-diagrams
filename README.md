@@ -143,4 +143,4 @@ All files are in the repository root (flat layout): 25 `.webp` diagrams numbered
 
 MIT. See [LICENSE](LICENSE).
 
-Author: Harpreet Singh
+Author: H. S. Khalsa
