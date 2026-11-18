@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Interactive: Re×Ra×Pr Space Colored by Nu</title>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .plot-container {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        @media (max-width: 640px) {
+            #plot {
+                height: 500px !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <header class="text-center mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent mb-2">
+                3D Interactive: Re×Ra×Pr Space Colored by Nu
+            </h1>
+            <p class="text-slate-300 text-sm sm:text-base max-w-3xl mx-auto">
+                Visualizing convection heat transfer regimes across Reynolds, Rayleigh, and Prandtl numbers
+            </p>
+        </header>
+
+        <div class="glass rounded-2xl p-3 sm:p-6 plot-container">
+            <div id="plot" class="w-full h-[600px] sm:h-[700px] lg:h-[800px] rounded-xl overflow-hidden"></div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="glass rounded-xl p-4 sm:p-5">
+                <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+                    </svg>
+                    Instructions
+                </h2>
+                <ul class="space-y-2 text-sm sm:text-base text-slate-300">
+                    <li class="flex items-start gap-2">
+                        <span class="text-cyan-400 font-bold">•</span>
+                        <span><strong>Click-drag</strong> to rotate the 3D view</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-cyan-400 font-bold">•</span>
+                        <span><strong>Scroll</strong> or pinch to zoom in/out</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-cyan-400 font-bold">•</span>
+                        <span><strong>Right-click drag</strong> to pan the camera</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-cyan-400 font-bold">•</span>
+                        <span><strong>Double-click</strong> to reset the view</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass rounded-xl p-4 sm:p-5">
+                <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                    Convection Regimes
+                </h2>
+                <ul class="space-y-2 text-sm sm:text-base text-slate-300">
+                    <li class="flex items-start gap-2">
+                        <span class="inline-block w-3 h-3 bg-blue-400 rounded-full mt-1.5 flex-shrink-0"></span>
+                        <span><strong>Forced convection:</strong> High Re, Nu ∝ Re^0.8 × Pr^0.4</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="inline-block w-3 h-3 bg-yellow-400 rounded-full mt-1.5 flex-shrink-0"></span>
+                        <span><strong>Natural convection:</strong> High Ra, Nu ∝ Ra^0.25 × Pr^n</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="inline-block w-3 h-3 bg-pink-400 rounded-full mt-1.5 flex-shrink-0"></span>
+                        <span><strong>Mixed convection:</strong> Ri = Gr/Re² ≈ 1</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <footer class="mt-8 text-center text-xs sm:text-sm text-slate-400">
+            <p>5000 data points sampled across convection parameter space. Color scale: Plasma (Nu = 10 to 500)</p>
+        </footer>
+    </div>
+
+    <script>
+        // Generate 5000 synthetic data points for Re, Ra, Pr space
+        const N = 5000;
+        const Re = new Array(N);
+        const Ra = new Array(N);
+        const Pr = new Array(N);
+        const Nu = new Array(N);
+        const regimes = new Array(N);
+
+        // Log-uniform sampling function
+        function logUniform(min, max) {
+            return Math.pow(10, Math.random() * (Math.log10(max) - Math.log10(min)) + Math.log10(min));
+        }
+
+        // Generate correlated data to show realistic convection clusters
+        for (let i = 0; i < N; i++) {
+            // Sample Re, Ra, Pr in log space
+            const reVal = logUniform(1e3, 1e6);
+            const raVal = logUniform(1e3, 1e9);
+            const prVal = logUniform(0.1, 100);
+            
+            Re[i] = reVal;
+            Ra[i] = raVal;
+            Pr[i] = prVal;
+
+            // Calculate Grashof number: Gr = Ra / Pr
+            const grVal = raVal / prVal;
+            
+            // Richardson number: Ri = Gr / Re^2
+            const riVal = grVal / (reVal * reVal);
+            
+            let nuVal, regime;
+            
+            // Determine convection regime and calculate Nu based on correlations
+            if (riVal < 0.1) {
+                // Forced convection dominant: Dittus-Boelter type
+                nuVal = 0.023 * Math.pow(reVal, 0.8) * Math.pow(prVal, 0.4);
+                regime = 'Forced';
+            } else if (riVal > 10) {
+                // Natural convection dominant: vertical plate correlation
+                nuVal = 0.59 * Math.pow(raVal, 0.25);
+                regime = 'Natural';
+            } else {
+                // Mixed convection: blend of both
+                const forced = 0.023 * Math.pow(reVal, 0.8) * Math.pow(prVal, 0.4);
+                const natural = 0.59 * Math.pow(raVal, 0.25);
+                const weight = 1 / (1 + riVal); // smooth transition
+                nuVal = forced * weight + natural * (1 - weight);
+                regime = 'Mixed';
+            }
+            
+            // Add some realistic scatter
+            nuVal *= (0.9 + Math.random() * 0.2);
+            
+            // Clamp to colormap range 10-500
+            Nu[i] = Math.max(10, Math.min(500, nuVal));
+            regimes[i] = regime;
+        }
+
+        // Create 3D scatter plot
+        const trace = {
+            x: Re,
+            y: Ra,
+            z: Pr,
+            mode: 'markers',
+            type: 'scatter3d',
+            marker: {
+                size: 3,
+                color: Nu,
+                colorscale: 'Plasma',
+                cmin: 10,
+                cmax: 500,
+                colorbar: {
+                    title: {
+                        text: 'Nu',
+                        font: { size: 14, color: '#e2e8f0' }
+                    },
+                    thickness: 15,
+                    len: 0.7,
+                    tickfont: { color: '#cbd5e1' }
+                },
+                opacity: 0.8,
+                line: {
+                    width: 0
+                }
+            },
+            text: regimes.map((r, i) => 
+                `Re: ${Re[i].toExponential(2)}<br>` +
+                `Ra: ${Ra[i].toExponential(2)}<br>` +
+                `Pr: ${Pr[i].toExponential(2)}<br>` +
+                `Nu: ${Nu[i].toFixed(1)}<br>` +
+                `Regime: ${r}`
+            ),
+            hovertemplate: '%{text}<extra></extra>',
+            name: 'Data Points'
+        };
+
+        // Add annotation traces for clusters
+        const annotations = [
+            {
+                x: [5e5],
+                y: [1e5],
+                z: [1],
+                mode: 'text+markers',
+                type: 'scatter3d',
+                marker: { size: 8, color: '#60a5fa', symbol: 'diamond' },
+                text: ['Forced convection cluster'],
+                textposition: 'top center',
+                textfont: { size: 12, color: '#60a5fa' },
+                name: 'Forced',
+                showlegend: false
+            },
+            {
+                x: [5e3],
+                y: [5e7],
+                z: [5],
+                mode: 'text+markers',
+                type: 'scatter3d',
+                marker: { size: 8, color: '#fbbf24', symbol: 'diamond' },
+                text: ['Natural convection cluster'],
+                textposition: 'top center',
+                textfont: { size: 12, color: '#fbbf24' },
+                name: 'Natural',
+                showlegend: false
+            },
+            {
+                x: [1e5],
+                y: [1e7],
+                z: [10],
+                mode: 'text+markers',
+                type: 'scatter3d',
+                marker: { size: 8, color: '#f472b6', symbol: 'diamond' },
+                text: ['Mixed convection'],
+                textposition: 'top center',
+                textfont: { size: 12, color: '#f472b6' },
+                name: 'Mixed',
+                showlegend: false
+            }
+        ];
+
+        const layout = {
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            scene: {
+                xaxis: {
+                    title: 'Reynolds Number, Re',
+                    type: 'log',
+                    range: [3, 6], // log10(1e3) to log10(1e6)
+                    gridcolor: 'rgba(148, 163, 184, 0.2)',
+                    zerolinecolor: 'rgba(148, 163, 184, 0.3)',
+                    color: '#e2e8f0',
+                    titlefont: { size: 12 },
+                    tickfont: { size: 10 }
+                },
+                yaxis: {
+                    title: 'Rayleigh Number, Ra',
+                    type: 'log',
+                    range: [3, 9], // log10(1e3) to log10(1e9)
+                    gridcolor: 'rgba(148, 163, 184, 0.2)',
+                    zerolinecolor: 'rgba(148, 163, 184, 0.3)',
+                    color: '#e2e8f0',
+                    titlefont: { size: 12 },
+                    tickfont: { size: 10 }
+                },
+                zaxis: {
+                    title: 'Prandtl Number, Pr',
+                    type: 'log',
+                    range: [-1, 2], // log10(0.1) to log10(100)
+                    gridcolor: 'rgba(148, 163, 184, 0.2)',
+                    zerolinecolor: 'rgba(148, 163, 184, 0.3)',
+                    color: '#e2e8f0',
+                    titlefont: { size: 12 },
+                    tickfont: { size: 10 }
+                },
+                camera: {
+                    eye: { x: 1.8, y: 1.8, z: 1.5 }
+                },
+                bgcolor: 'rgba(15, 23, 42, 0.3)'
+            },
+            margin: { l: 0, r: 0, b: 0, t: 0 },
+            showlegend: false,
+            hoverlabel: {
+                bgcolor: 'rgba(15, 23, 42, 0.95)',
+                bordercolor: '#475569',
+                font: { size: 12, color: '#e2e8f0' }
+            }
+        };
+
+        const config = {
+            responsive: true,
+            displayModeBar: true,
+            displaylogo: false,
+            modeBarButtonsToRemove: ['toImage', 'sendDataToCloud'],
+            modeBarButtonsToAdd: [{
+                name: 'Reset Camera',
+                icon: Plotly.Icons.home,
+                click: function(gd) {
+                    Plotly.relayout(gd, {
+                        'scene.camera': {
+                            eye: { x: 1.8, y: 1.8, z: 1.5 }
+                        }
+                    });
+                }
+            }]
+        };
+
+        // Render plot
+        Plotly.newPlot('plot', [trace, ...annotations], layout, config);
+
+        // Handle resize for mobile
+        window.addEventListener('resize', () => {
+            Plotly.Plots.resize('plot');
+        });
+    </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
